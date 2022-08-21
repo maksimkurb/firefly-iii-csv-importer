@@ -17,7 +17,7 @@ class FireflyClient(
         var pageNum = 1
 
         do {
-            val page = accountsApi.listAccount(pageNum, type = AccountTypeFilter.assetAccount, date = null)
+            val page = accountsApi.listAccount(pageNum, type = AccountTypeFilter.AssetAccount, date = null)
             accounts.addAll(page.data)
             pageNum++
         } while (pageNum < (page.meta.pagination?.totalPages ?: -1))

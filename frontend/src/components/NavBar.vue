@@ -6,13 +6,9 @@
         <i-nav-item to="/">Home</i-nav-item>
         <i-nav-item to="/about">About</i-nav-item>
       </i-nav>
-      <i-input placeholder="Type something..">
-        <template #append>
-          <i-button color="primary">
-            <i-icon name="ink-search" />
-          </i-button>
-        </template>
-      </i-input>
+      <i-nav>
+        <i-nav-item to="/login">Login</i-nav-item>
+      </i-nav>
     </i-navbar-collapsible>
   </i-navbar>
 </template>

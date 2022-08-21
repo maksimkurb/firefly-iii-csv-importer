@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
-    id("org.springframework.boot") version "2.7.0"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    id("org.springframework.experimental.aot") version "0.12.0-SNAPSHOT"
+    id("org.springframework.boot") version "2.7.3"
+    id("io.spring.dependency-management") version "1.0.13.RELEASE"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.spring") version "1.7.10"
+    id("org.springframework.experimental.aot") version "0.12.1"
 
-    id("org.openapi.generator") version "5.4.0"
+    id("org.openapi.generator") version "6.0.1"
 }
 
 group = "ru.cubly.firefly"
@@ -24,11 +24,17 @@ configurations {
 repositories {
     maven { url = uri("https://repo.spring.io/snapshot") }
     maven { url = uri("https://repo.spring.io/milestone") }
+    maven { url = uri("https://repo.spring.io/release") }
     mavenCentral()
 }
 
-extra["springCloudVersion"] = "2021.0.3-SNAPSHOT"
-extra["testcontainersVersion"] = "1.17.2"
+extra["springCloudVersion"] = "2021.0.3"
+extra["testcontainersVersion"] = "1.17.3"
+
+val ktor_version = "2.1.0"
+val mapstructVersion = "1.5.2.Final"
+val lombokVersion = "1.18.22"
+val lombokMapstructBindingVersion = "0.2.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -36,7 +42,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
@@ -44,15 +49,22 @@ dependencies {
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+    // MapStruct & Lombok
+    implementation("org.mapstruct:mapstruct:${mapstructVersion}")
+    implementation("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}")
 
     runtimeOnly("com.h2database:h2")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
@@ -81,18 +93,28 @@ dependencyManagement {
 openApiGenerate {
     generatorName.set("kotlin")
     inputSpec.set("$rootDir/specs/firefly-iii-1.5.6.yaml")
-    outputDir.set("$buildDir/generated")
+    outputDir.set("$buildDir/openapi")
     apiPackage.set("ru.cubly.firefly.api")
-    invokerPackage.set("ru.cubly.firefly.invoker")
+    packageName.set("ru.cubly.firefly.client")
     modelPackage.set("ru.cubly.firefly.model")
-    library.set("jvm-okhttp4")
-    configOptions.put("serializationLibrary", "jackson")
-    configOptions.put("dateLibrary", "java8")
+    configOptions.set(mapOf(
+        "java8" to "true",
+        "dateLibrary" to "java8",
+        "library" to "jvm-okhttp4",
+        "enumPropertyNaming" to "PascalCase"
+    ))
+}
+
+tasks.named("compileKotlin") {
+    dependsOn(":openApiGenerate")
+}
+tasks.named("processResources") {
+    dependsOn(":openApiGenerate")
 }
 
 configure<SourceSetContainer> {
     named("main") {
-        java.srcDir("$buildDir/generated/src/main/kotlin")
+        java.srcDir("$buildDir/openapi/src/main/kotlin")
     }
 }
 

@@ -15,7 +15,8 @@
     "@inkline/inkline": "^3.0.8",
     "pinia": "^2.0.13",
     "vue": "^3.2.33",
-    "vue-router": "^4.0.14"
+    "vue-router": "^4.0.14",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",

@@ -8453,13 +8453,7 @@ components:
         - reconciliation
         - opening balance
     PolymorphicProperty:
-      oneOf:
-        - type: boolean
-        - type: string
-        - type: object
-        - type: array
-          items:
-            $ref: '#/components/schemas/StringArrayItem'
+      type: string
     RecurrenceRepetitionType:
       type: string
       format: string
@@ -9291,8 +9285,7 @@ components:
           example: true
           description: "If the currency is enabled"
         default:
-          type: boolean
-          format: boolean
+          type: string
           example: true
           description: "If the currency must be the default for the user. You can only submit TRUE."
           enum:
