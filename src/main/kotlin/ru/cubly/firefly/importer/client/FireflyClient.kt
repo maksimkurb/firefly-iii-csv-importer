@@ -12,20 +12,22 @@ class FireflyClient(
     private val transactionsApi: TransactionsApi
 ) {
 
-    fun listAssetAccounts(): List<AccountRead> {
+    suspend fun listAssetAccounts(): List<AccountRead> {
         val accounts = mutableListOf<AccountRead>()
         var pageNum = 1
 
         do {
             val page = accountsApi.listAccount(pageNum, type = AccountTypeFilter.AssetAccount, date = null)
-            accounts.addAll(page.data)
+            val body = page.body()
+
+            accounts.addAll(body.data)
             pageNum++
-        } while (pageNum < (page.meta.pagination?.totalPages ?: -1))
+        } while (pageNum < (body.meta.pagination?.totalPages ?: -1))
 
         return accounts
     }
 
-    fun addTransaction(transaction: TransactionSplitStore) {
+    suspend fun addTransaction(transaction: TransactionSplitStore) {
         transactionsApi.storeTransaction(TransactionStore(
             listOf(transaction),
             errorIfDuplicateHash = true,

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd
+		                    http://www.liquibase.org/xml/ns/dbchangelog-ext
+		                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="2022-08-21--01_initial_schema_01_mapping_config" author="Maxim Kurbatov">
+        <createTable tableName="mapping_config">
+            <column name="mapping_config_id" type="${id.type}" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="mapping_config_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="${text.type}"/>
+            <column name="user_id" type="${id.type}"/>
+            <column name="global" type="${boolean.type}"/>
+            <column name="config" type="${json.type}"/>
+            <column name="created_at" type="${timestamp.type}" defaultValueComputed="${current.timestamp.function}"/>
+            <column name="updated_at" type="${timestamp.type}" defaultValueComputed="${current.timestamp.function}"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="mapping_config" columnName="name" columnDataType="VARCHAR(255)" />
+        <addNotNullConstraint tableName="mapping_config" columnName="user_id" columnDataType="${id.type}" />
+        <addNotNullConstraint tableName="mapping_config" columnName="global" columnDataType="${boolean.type}" />
+        <addNotNullConstraint tableName="mapping_config" columnName="config" columnDataType="${json.type}" />
+        <addNotNullConstraint tableName="mapping_config" columnName="created_at" columnDataType="${timestamp.type}" />
+        <addNotNullConstraint tableName="mapping_config" columnName="updated_at" columnDataType="${timestamp.type}" />
+
+        <createIndex tableName="mapping_config"
+                     indexName="mapping_config_idx_user_id">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2022-08-21--01_initial_schema_02_import" author="Maxim Kurbatov">
+        <createTable tableName="import">
+            <column name="import_id" type="${id.type}" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="import_pk"/>
+            </column>
+            <column name="filename" type="VARCHAR(255)"/>
+            <column name="user_id" type="${id.type}"/>
+            <column name="mapping_config_id" type="${id.type}"/>
+            <column name="created_at" type="${timestamp.type}" defaultValueComputed="${current.timestamp.function}"/>
+            <column name="updated_at" type="${timestamp.type}" defaultValueComputed="${current.timestamp.function}"/>
+            <column name="finished_at" type="${timestamp.type}" defaultValueComputed="${current.timestamp.function}"/>
+        </createTable>
+
+
+        <addNotNullConstraint tableName="import" columnName="filename" columnDataType="VARCHAR(255)" />
+        <addNotNullConstraint tableName="import" columnName="user_id" columnDataType="VARCHAR(255)" />
+        <addNotNullConstraint tableName="import" columnName="mapping_config_id" columnDataType="${id.type}" />
+        <addNotNullConstraint tableName="import" columnName="created_at" columnDataType="${timestamp.type}" />
+        <addNotNullConstraint tableName="import" columnName="updated_at" columnDataType="${timestamp.type}" />
+
+        <addForeignKeyConstraint baseTableName="import"
+                                 baseColumnNames="mapping_config_id"
+                                 constraintName="import_fk_mapping_config"
+                                 referencedTableName="mapping_config"
+                                 referencedColumnNames="mapping_config_id"
+                                 />
+
+        <createIndex tableName="import"
+                     indexName="import_idx_user_id">
+            <column name="user_id"/>
+        </createIndex>
+        <createIndex tableName="import"
+                     indexName="import_idx_mapping_config_id">
+            <column name="mapping_config_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2022-08-21--01_initial_schema_03_raw_transaction" author="Maxim Kurbatov">
+        <createTable tableName="raw_transaction">
+            <column name="raw_transaction_id" type="${id.type}" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="raw_transaction_pk"/>
+            </column>
+            <column name="import_id" type="${id.type}"/>
+            <column name="firefly_transaction_id" type="${id.type}"/>
+            <column name="row_number" type="${id.type}"/>
+            <column name="data" type="${json.type}"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="raw_transaction" columnName="import_id" columnDataType="${id.type}" />
+        <addNotNullConstraint tableName="raw_transaction" columnName="row_number" columnDataType="${id.type}" />
+
+        <addForeignKeyConstraint baseTableName="raw_transaction"
+                                 baseColumnNames="import_id"
+                                 constraintName="raw_transaction_fk_import"
+                                 referencedTableName="import"
+                                 referencedColumnNames="import_id"
+        />
+
+        <createIndex tableName="raw_transaction"
+                     indexName="raw_transaction_idx_import_id">
+            <column name="import_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

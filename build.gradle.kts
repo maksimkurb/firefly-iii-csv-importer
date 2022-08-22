@@ -5,6 +5,7 @@ plugins {
     id("org.springframework.boot") version "2.7.3"
     id("io.spring.dependency-management") version "1.0.13.RELEASE"
     kotlin("jvm") version "1.7.10"
+    kotlin("kapt") version "1.7.10"
     kotlin("plugin.spring") version "1.7.10"
     id("org.springframework.experimental.aot") version "0.12.1"
 
@@ -21,6 +22,15 @@ configurations {
     }
 }
 
+kapt {
+    arguments {
+        // Set Mapstruct Configuration options here
+        // https://kotlinlang.org/docs/reference/kapt.html#annotation-processor-arguments
+        // https://mapstruct.org/documentation/stable/reference/html/#configuration-options
+        arg("mapstruct.defaultComponentModel", "spring")
+    }
+}
+
 repositories {
     maven { url = uri("https://repo.spring.io/snapshot") }
     maven { url = uri("https://repo.spring.io/milestone") }
@@ -31,9 +41,9 @@ repositories {
 extra["springCloudVersion"] = "2021.0.3"
 extra["testcontainersVersion"] = "1.17.3"
 
-val ktor_version = "2.1.0"
+val ktor_version = "1.6.8"
 val mapstructVersion = "1.5.2.Final"
-val lombokVersion = "1.18.22"
+val lombokVersion = "1.18.24"
 val lombokMapstructBindingVersion = "0.2.0"
 
 dependencies {
@@ -46,12 +56,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
     implementation("org.springframework.session:spring-session-core")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
+    implementation("org.springframework.security:spring-security-oauth2-client:5.7.3")
 
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-json-jvm:$ktor_version")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    developmentOnly("io.projectreactor:reactor-tools")
+
+    implementation("io.github.wimdeblauwe:error-handling-spring-boot-starter:3.1.0")
 
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 
@@ -59,20 +76,31 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.10")
+    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.10")
+    implementation("org.springdoc:springdoc-openapi-security:1.6.10")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.10")
+    implementation("org.springdoc:springdoc-openapi-native:1.6.10")
+
     // MapStruct & Lombok
     implementation("org.mapstruct:mapstruct:${mapstructVersion}")
     implementation("org.projectlombok:lombok:${lombokVersion}")
-    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}")
+    kapt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    kapt("org.projectlombok:lombok:${lombokVersion}")
+    kapt("org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}")
 
-    runtimeOnly("com.h2database:h2")
+    implementation("io.github.daggerok:liquibase-r2dbc-spring-boot-starter:2.1.1")
+    implementation("com.github.blagerweij:liquibase-sessionlock:1.5.3")
+
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
-    runtimeOnly("io.r2dbc:r2dbc-h2")
-    runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("org.postgresql:r2dbc-postgresql")
 
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+//    runtimeOnly("org.postgresql:postgresql")
+//    runtimeOnly("org.postgresql:r2dbc-postgresql")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+    runtimeOnly("org.mariadb:r2dbc-mariadb")
+    runtimeOnly("io.r2dbc:r2dbc-pool")
+
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
@@ -100,7 +128,8 @@ openApiGenerate {
     configOptions.set(mapOf(
         "java8" to "true",
         "dateLibrary" to "java8",
-        "library" to "jvm-okhttp4",
+        "library" to "jvm-ktor",
+        "serializationLibrary" to "jackson",
         "enumPropertyNaming" to "PascalCase"
     ))
 }
@@ -134,3 +163,8 @@ tasks.withType<BootBuildImage> {
     builder = "paketobuildpacks/builder:tiny"
     environment = mapOf("BP_NATIVE_IMAGE" to "true")
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask>()
+    .configureEach {
+        kaptProcessJvmArgs.add("-Xmx512m")
+    }

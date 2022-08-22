@@ -1,0 +1,15 @@
+version: '3'
+services:
+  mariadb:
+    image: "mariadb:10"
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: firefly-importer
+      MARIADB_DATABASE: firefly-importer
+      MARIADB_USER: firefly-importer
+      MARIADB_PASSWORD: firefly-importer
+    volumes:
+      - "firefly_importer_data:/var/lib/mysql"
+volumes:
+  firefly_importer_data:

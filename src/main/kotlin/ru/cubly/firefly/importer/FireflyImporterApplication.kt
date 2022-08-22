@@ -1,11 +1,23 @@
 package ru.cubly.firefly.importer
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+import org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
 import org.springframework.boot.runApplication
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.util.*
 
-@SpringBootApplication
+@SpringBootApplication(
+    exclude = [
+        DataSourceAutoConfiguration::class,
+        ReactiveUserDetailsServiceAutoConfiguration::class
+    ]
+)
 class FireflyImporterApplication
 
 fun main(args: Array<String>) {
-    runApplication<FireflyImporterApplication>(*args)
+    runApplication<FireflyImporterApplication>(*args) {
+        TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.from(ZoneOffset.UTC)))
+    }
 }
