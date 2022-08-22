@@ -1,38 +1,50 @@
 package ru.cubly.firefly.importer.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
+import ru.cubly.firefly.importer.entity.MappingConfigSpec
 import java.time.ZonedDateTime
+import javax.validation.Valid
+import javax.validation.constraints.NotNull
 
 @Table("mapping_config")
 data class MappingConfig(
-    @Id
-    @Column("mapping_config_id")
+    @field:Id
+    @field:Column("mapping_config_id")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var mappingConfigId: Long?,
 
-    @Column("name")
-    var name: String,
+    @field:Column("name")
+    @field:NotNull
+    var name: String?,
 
-    @Column("description")
+    @field:Column("description")
     var description: String?,
 
-    @Column("user_id")
-    var userId: Long,
+    @field:Column("user_id")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    var userId: Long?,
 
-    @Column("global")
-    var global: Boolean,
+    @field:Column("global")
+    @field:NotNull
+    var global: Boolean?,
 
-    @Column("config")
-    var config: String,
+    @field:Column("config")
+    @field:NotNull
+    @field:Valid
+    var config: MappingConfigSpec?,
 
-    @CreatedDate
-    @Column("created_at")
+    @field:CreatedDate
+    @field:Column("created_at")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var createdAt: ZonedDateTime?,
 
-    @LastModifiedDate
-    @Column("updated_at")
+    @field:LastModifiedDate
+    @field:Column("updated_at")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var updatedAt: ZonedDateTime?,
 )

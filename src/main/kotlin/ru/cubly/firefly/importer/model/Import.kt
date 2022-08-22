@@ -1,35 +1,45 @@
 package ru.cubly.firefly.importer.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.ZonedDateTime
+import javax.validation.constraints.NotNull
 
 @Table("import")
 data class Import(
-    @Id
-    @Column("import_id")
-    var importId: Long,
+    @field:Id
+    @field:Column("import_id")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    var importId: Long?,
 
-    @Column("filename")
-    var filename: String,
+    @field:Column("filename")
+    @field:NotNull
+    var filename: String?,
 
-    @Column("user_id")
-    var userId: Long,
+    @field:Column("user_id")
+    @field:JsonIgnore
+    var userId: Long?,
 
-    @Column("mapping_config_id")
-    var mappingConfigId: Long,
+    @field:Column("mapping_config_id")
+    @field:NotNull
+    var mappingConfigId: Long?,
 
-    @CreatedDate
-    @Column("created_at")
+    @field:CreatedDate
+    @field:Column("created_at")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var createdAt: ZonedDateTime?,
 
-    @LastModifiedDate
-    @Column("updated_at")
+    @field:LastModifiedDate
+    @field:Column("updated_at")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var updatedAt: ZonedDateTime?,
 
-    @Column("finished_at")
+    @field:Column("finished_at")
+    @get:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var finishedAt: ZonedDateTime?,
 )

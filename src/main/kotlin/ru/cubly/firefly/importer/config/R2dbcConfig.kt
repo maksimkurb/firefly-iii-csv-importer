@@ -1,7 +1,6 @@
 package ru.cubly.firefly.importer.config
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -15,6 +14,7 @@ import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions
 import org.springframework.data.r2dbc.dialect.MySqlDialect
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
+import ru.cubly.firefly.importer.entity.MappingConfigSpec
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -27,6 +27,8 @@ import java.util.*
 @EnableR2dbcRepositories
 @EnableR2dbcAuditing(dateTimeProviderRef = "dateTimeProvider")
 class R2dbcConfig {
+    private val log: Logger = LoggerFactory.getLogger(R2dbcConfig::class.java)
+
     @Bean("dateTimeProvider")
     fun dateTimeProvider(): DateTimeProvider = DateTimeProvider {
         Optional.of(OffsetDateTime.now())
@@ -37,54 +39,57 @@ class R2dbcConfig {
         return R2dbcCustomConversions.of(
             MySqlDialect.INSTANCE,
             listOf(
-                StringToJsonNodeConverter(objectMapper),
-                JsonNodeToStringConverter(objectMapper),
                 TimeStampToOffsetDateTimeConverter(),
                 OffsetDateTimeToTimeStampConverter(),
+                jsonReadingConverter<MappingConfigSpec>(objectMapper),
+                jsonWritingConverter<MappingConfigSpec>(objectMapper),
+                jsonReadingConverter(objectMapper, object : TypeReference<Map<String, String>>() {}),
+                jsonWritingConverter<Map<String, String>>(objectMapper),
             )
         )
     }
 
-    @ReadingConverter
-    internal class StringToJsonNodeConverter(objectMapper: ObjectMapper) : Converter<String, JsonNode> {
-        private val log: Logger = LoggerFactory.getLogger(StringToJsonNodeConverter::class.java)
-
-        private val objectMapper: ObjectMapper
-
-        init {
-            this.objectMapper = objectMapper
-        }
-
-        override fun convert(string: String): JsonNode {
-            try {
-                return objectMapper.readTree(string)
-            } catch (e: IOException) {
-                log.error("Problem while parsing JSON: {}", string, e)
+    private inline fun <reified T> jsonReadingConverter(objectMapper: ObjectMapper): Converter<String, T?> {
+        return object : Converter<String, T?> {
+            override fun convert(source: String): T? {
+                try {
+                    return objectMapper.readValue(source, T::class.java)
+                } catch (e: IOException) {
+                    log.error("Problem while deserializing JSON: {}", source, e)
+                }
+                return null
             }
-            return objectMapper.createObjectNode()
         }
     }
 
-    @WritingConverter
-    internal class JsonNodeToStringConverter(objectMapper: ObjectMapper) : Converter<JsonNode, String> {
-        private val log: Logger = LoggerFactory.getLogger(JsonNodeToStringConverter::class.java)
-
-        private val objectMapper: ObjectMapper
-
-        init {
-            this.objectMapper = objectMapper
-        }
-
-        override fun convert(source: JsonNode): String {
-            try {
-                return objectMapper.writeValueAsString(source)
-            } catch (e: JsonProcessingException) {
-                log.error("Error occurred while serializing map to JSON: {}", source, e)
+    private inline fun <reified T> jsonReadingConverter(
+        objectMapper: ObjectMapper,
+        typeRef: TypeReference<T>
+    ): Converter<String, T?> {
+        return object : Converter<String, T?> {
+            override fun convert(source: String): T? {
+                try {
+                    return objectMapper.readValue(source, typeRef)
+                } catch (e: IOException) {
+                    log.error("Problem while deserializing JSON: {}", source, e)
+                }
+                return null
             }
-            return ""
         }
     }
 
+    private inline fun <reified T : Any> jsonWritingConverter(objectMapper: ObjectMapper): Converter<T, String?> {
+        return object : Converter<T, String?> {
+            override fun convert(source: T): String? {
+                try {
+                    return objectMapper.writeValueAsString(source)
+                } catch (e: IOException) {
+                    log.error("Problem while serializing JSON: {}", source, e)
+                }
+                return null
+            }
+        }
+    }
 
     @WritingConverter
     class OffsetDateTimeToTimeStampConverter : Converter<ZonedDateTime, LocalDateTime> {

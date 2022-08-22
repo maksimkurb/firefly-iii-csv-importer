@@ -6,19 +6,19 @@ import org.springframework.data.relational.core.mapping.Table
 
 @Table("raw_transaction_id")
 data class RawTransaction(
-    @Id
-    @Column("raw_transaction_id")
-    var rawTransactionId: Long,
+    @field:Id
+    @field:Column("raw_transaction_id")
+    var rawTransactionId: Long?,
 
-    @Column("import_id")
-    var importId: Long,
+    @field:Column("import_id")
+    var importId: Long?,
 
-    @Column("firefly_transaction_id")
-    var fireflyTransactionId: Long,
+    @field:Column("firefly_transaction_id")
+    var fireflyTransactionId: Long?,
 
-    @Column("row_number")
-    var rowNumber: Long,
+    @field:Column("row_number")
+    var rowNumber: Long?,
 
-    @Column("data")
-    var data: String,
+    @field:Column("data")
+    var data: String?,
 )

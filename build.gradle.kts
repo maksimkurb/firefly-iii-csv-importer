@@ -65,7 +65,6 @@ dependencies {
     implementation("io.ktor:ktor-client-json-jvm:$ktor_version")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("io.projectreactor:reactor-tools")
 
     implementation("io.github.wimdeblauwe:error-handling-spring-boot-starter:3.1.0")
@@ -81,6 +80,9 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-security:1.6.10")
     implementation("org.springdoc:springdoc-openapi-kotlin:1.6.10")
     implementation("org.springdoc:springdoc-openapi-native:1.6.10")
+
+    implementation("com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0")
+    implementation("com.eclipsesource.j2v8:j2v8_win32_x86_64:4.6.0")
 
     // MapStruct & Lombok
     implementation("org.mapstruct:mapstruct:${mapstructVersion}")
@@ -150,7 +152,7 @@ configure<SourceSetContainer> {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations")
         jvmTarget = "17"
     }
 }
