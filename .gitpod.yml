@@ -1,0 +1,12 @@
+tasks:
+  - init: |
+      gradle build
+    command: |
+      gradle bootRun
+ports:
+  - port: 8123
+    onOpen: open-browser
+jetbrains:
+  intellij:
+    prebuilds:
+      version: stable
