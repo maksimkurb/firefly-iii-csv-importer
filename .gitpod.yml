@@ -3,7 +3,7 @@ image:
 
 tasks:
   - init: |
-      gradle build
+      gradle build -x test
     command: |
       gradle bootRun
 
