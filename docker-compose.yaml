@@ -11,5 +11,11 @@ services:
       MARIADB_PASSWORD: firefly-importer
     volumes:
       - "firefly_importer_data:/var/lib/mysql"
+  redis:
+    image: bitnami/redis
+    ports:
+      - "6379:6379"
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
 volumes:
   firefly_importer_data:

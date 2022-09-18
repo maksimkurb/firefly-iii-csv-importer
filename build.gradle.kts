@@ -16,6 +16,10 @@ group = "ru.cubly.firefly"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
+springAot {
+    removeYamlSupport.set(true)
+}
+
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
@@ -56,14 +60,20 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
     implementation("org.springframework.session:spring-session-core")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.session:spring-session-data-redis")
     implementation("org.springframework.security:spring-security-oauth2-client:5.7.3")
 
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
+    implementation("javax.servlet:javax.servlet-api:4.0.1")
+
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-json-jvm:$ktor_version")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
+
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.4")
 
     developmentOnly("io.projectreactor:reactor-tools")
 
@@ -75,11 +85,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.10")
-    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.10")
-    implementation("org.springdoc:springdoc-openapi-security:1.6.10")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.10")
-    implementation("org.springdoc:springdoc-openapi-native:1.6.10")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
+    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.11")
+    implementation("org.springdoc:springdoc-openapi-security:1.6.11")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.11")
+    implementation("org.springdoc:springdoc-openapi-native:1.6.11")
 
     implementation("com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0")
     implementation("com.eclipsesource.j2v8:j2v8_win32_x86_64:4.6.0")
@@ -141,6 +151,10 @@ tasks.named("compileKotlin") {
 }
 tasks.named("processResources") {
     dependsOn(":openApiGenerate")
+}
+
+tasks.named("generateTestAot") {
+    enabled = false
 }
 
 configure<SourceSetContainer> {

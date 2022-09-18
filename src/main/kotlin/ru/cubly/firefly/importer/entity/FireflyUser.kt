@@ -6,7 +6,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import java.io.Serializable
 import java.util.*
 
-class FireflyUser(authorities: Collection<GrantedAuthority>?, userId: Long, username: String, attributes: Map<String, Any>) :
+class FireflyUser(
+    authorities: Collection<GrantedAuthority>?,
+    userId: Long,
+    username: String,
+    attributes: Map<String, Any>
+) :
     OAuth2User, Serializable {
 
     private val authorities: Set<GrantedAuthority>

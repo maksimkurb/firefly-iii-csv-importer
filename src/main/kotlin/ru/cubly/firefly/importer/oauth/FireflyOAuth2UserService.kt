@@ -88,10 +88,12 @@ class FireflyOAuth2UserService : ReactiveOAuth2UserService<OAuth2UserRequest, OA
                 for (scope: String in token.scopes) {
                     authorities.add(SimpleGrantedAuthority("SCOPE_$scope"))
                 }
-                FireflyUser(authorities,
+                FireflyUser(
+                    authorities,
                     user.data.id.toLong(),
                     user.data.attributes.email,
-                    attrs)
+                    attrs
+                )
             }
                 .onErrorMap({ ex: Throwable ->
                     (ex is UnsupportedMediaTypeException ||

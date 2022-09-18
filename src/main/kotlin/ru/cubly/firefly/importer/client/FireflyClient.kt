@@ -28,11 +28,13 @@ class FireflyClient(
     }
 
     suspend fun addTransaction(transaction: TransactionSplitStore) {
-        transactionsApi.storeTransaction(TransactionStore(
-            listOf(transaction),
-            errorIfDuplicateHash = true,
-            applyRules = true,
-            fireWebhooks = true
-        ))
+        transactionsApi.storeTransaction(
+            TransactionStore(
+                listOf(transaction),
+                errorIfDuplicateHash = true,
+                applyRules = true,
+                fireWebhooks = true
+            )
+        )
     }
 }

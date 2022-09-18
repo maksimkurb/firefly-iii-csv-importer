@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 import ru.cubly.firefly.importer.entity.FireflyUser
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 class UserController {
     @GetMapping
     fun getCurrentUser(@AuthenticationPrincipal principal: FireflyUser): Mono<ResponseEntity<FireflyUser>> {

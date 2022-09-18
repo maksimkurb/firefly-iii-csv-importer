@@ -1,5 +1,6 @@
 package ru.cubly.firefly.importer.model
 
+import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -20,5 +21,8 @@ data class RawTransaction(
     var rowNumber: Long?,
 
     @field:Column("data")
-    var data: String?,
-)
+    var data: JsonNode?,
+) {
+    constructor(importId: Long?, rowNumber: Long, data: JsonNode?)
+            : this(null, importId, null, rowNumber, data)
+}

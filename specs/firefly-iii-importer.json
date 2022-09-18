@@ -1,0 +1,792 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8123",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/scripts/eval": {
+      "post": {
+        "tags": [
+          "script-controller"
+        ],
+        "operationId": "sandboxEvaluate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScriptEvaluationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mappers": {
+      "get": {
+        "tags": [
+          "mapper-controller"
+        ],
+        "operationId": "list",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MappingConfig"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "mapper-controller"
+        ],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MappingConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MappingConfig"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mappers/{mappingConfigId}": {
+      "post": {
+        "tags": [
+          "mapper-controller"
+        ],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "mappingConfigId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MappingConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MappingConfig"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "mapper-controller"
+        ],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "mappingConfigId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/imports/{importId}": {
+      "get": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "item",
+        "parameters": [
+          {
+            "name": "importId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Import"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "importId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Import"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Import"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "importId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/imports": {
+      "get": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "list_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Import"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file",
+                  "import"
+                ],
+                "type": "object",
+                "properties": {
+                  "import": {
+                    "$ref": "#/components/schemas/Import"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "import": {
+                  "contentType": "application/json"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Import"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FireflyUser"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/info/firefly-instance": {
+      "get": {
+        "tags": [
+          "info-controller"
+        ],
+        "operationId": "getFireflyInstanceUrl",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/imports/{importId}/transactions": {
+      "get": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "itemTransactions",
+        "parameters": [
+          {
+            "name": "importId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RawTransaction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ScriptEvaluationRequest": {
+        "required": [
+          "context",
+          "resultType",
+          "script"
+        ],
+        "type": "object",
+        "properties": {
+          "script": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "resultType": {
+            "type": "string",
+            "enum": [
+              "String",
+              "Integer",
+              "Boolean",
+              "Double"
+            ]
+          }
+        }
+      },
+      "MappingConfig": {
+        "required": [
+          "config",
+          "global",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "mappingConfigId": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "global": {
+            "type": "boolean"
+          },
+          "config": {
+            "$ref": "#/components/schemas/MappingConfigSpec"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "MappingConfigSpec": {
+        "required": [
+          "amount",
+          "applyRules",
+          "date",
+          "description",
+          "fireWebhooks",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "applyRules": {
+            "type": "boolean"
+          },
+          "fireWebhooks": {
+            "type": "boolean"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ValueSpecTransactionTypeProperty"
+          },
+          "date": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "description": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "currencyId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "currencyCode": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "foreignAmount": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "foreignCurrencyId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "foreignCurrencyCode": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "budgetId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "categoryId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "categoryName": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sourceId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "sourceName": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "destinationId": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "destinationName": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "piggyBankId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "piggyBankName": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "billId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "billName": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "notes": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "internalReference": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "externalId": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "externalUrl": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "bunqPaymentId": {
+            "$ref": "#/components/schemas/ValueSpecInteger"
+          },
+          "sepaCc": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sepaCtOp": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sepaCtId": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sepaDb": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sepaCountry": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sepaEp": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sepaCi": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "sepaBatchId": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "interestDate": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "bookDate": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "processDate": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "dueDate": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "paymentDate": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          },
+          "invoiceDate": {
+            "$ref": "#/components/schemas/ValueSpecString"
+          }
+        }
+      },
+      "ValueSpecInteger": {
+        "required": [
+          "valid"
+        ],
+        "type": "object",
+        "properties": {
+          "constant": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "field": {
+            "type": "string"
+          },
+          "fieldTrimming": {
+            "type": "boolean"
+          },
+          "script": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        }
+      },
+      "ValueSpecString": {
+        "required": [
+          "valid"
+        ],
+        "type": "object",
+        "properties": {
+          "constant": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          },
+          "fieldTrimming": {
+            "type": "boolean"
+          },
+          "script": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        }
+      },
+      "ValueSpecTransactionTypeProperty": {
+        "required": [
+          "valid"
+        ],
+        "type": "object",
+        "properties": {
+          "constant": {
+            "type": "string",
+            "enum": [
+              "withdrawal",
+              "deposit",
+              "transfer",
+              "reconciliation",
+              "opening balance"
+            ]
+          },
+          "field": {
+            "type": "string"
+          },
+          "fieldTrimming": {
+            "type": "boolean"
+          },
+          "script": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        }
+      },
+      "Import": {
+        "required": [
+          "mappingConfigId"
+        ],
+        "type": "object",
+        "properties": {
+          "importId": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "filename": {
+            "type": "string",
+            "readOnly": true
+          },
+          "mappingConfigId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "finishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "FireflyUser": {
+        "required": [
+          "attributes",
+          "authorities",
+          "name",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "username": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GrantedAuthority": {
+        "type": "object",
+        "properties": {
+          "authority": {
+            "type": "string"
+          }
+        }
+      },
+      "JsonNode": {
+        "type": "object"
+      },
+      "RawTransaction": {
+        "type": "object",
+        "properties": {
+          "rawTransactionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "importId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fireflyTransactionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rowNumber": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "$ref": "#/components/schemas/JsonNode"
+          }
+        }
+      }
+    }
+  }
+}

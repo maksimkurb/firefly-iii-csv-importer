@@ -19,8 +19,11 @@ import org.springframework.security.oauth2.client.web.server.ServerOAuth2Authori
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Flux
 import java.nio.charset.StandardCharsets
+
 
 @Configuration
 @EnableWebFluxSecurity
@@ -50,6 +53,22 @@ class OAuthConfig {
                 disable()
             }
 
+            cors {
+                val configurationSource = UrlBasedCorsConfigurationSource()
+                val config = CorsConfiguration()
+
+                config.addAllowedOrigin("http://localhost:8123")
+                config.addAllowedOrigin("http://localhost:3000")
+                config.addAllowedHeader("*")
+                config.allowCredentials = true
+                config.addAllowedMethod("GET")
+                config.addAllowedMethod("PUT")
+                config.addAllowedMethod("POST")
+                configurationSource.registerCorsConfiguration("/**", config)
+
+                this.configurationSource = configurationSource
+            }
+
             exceptionHandling {
                 authenticationEntryPoint = ServerAuthenticationEntryPoint { exchange, _ ->
                     val response: ServerHttpResponse = exchange.response
@@ -64,14 +83,9 @@ class OAuthConfig {
             }
 
             authorizeExchange {
-                authorize("/error", permitAll)
-                authorize("/swagger-ui/**", permitAll)
-                authorize("/swagger-ui.html", permitAll)
-                authorize("/login/**", permitAll)
-                authorize("/oauth2/**", permitAll)
-                authorize("/webjars/**", permitAll)
-                authorize("/v3/api-docs/**", permitAll)
-                authorize(anyExchange, authenticated)
+                authorize("/api/info/**", permitAll)
+                authorize("/api/**", authenticated)
+                authorize(anyExchange, permitAll)
             }
         }
     }

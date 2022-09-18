@@ -18,6 +18,11 @@ class MappingConfigService(
 
     fun list(userId: Long) = mappingConfigRepository.findAllByUserIdOrGlobalIsTrue(userId)
 
+    fun item(userId: Long, mapperId: Long) = mappingConfigRepository.findById(mapperId)
+        .switchIfEmpty(Mono.error(NotFoundException("Mapping config with id=${mapperId} is not found")))
+        .filter { userId == it.userId || it.global == true }
+        .switchIfEmpty(Mono.error(ForbiddenException("Mapping config with id=${mapperId} is not global or created by you")))
+
     fun create(userId: Long, mappingConfig: MappingConfig): Mono<MappingConfig> {
         mappingConfig.mappingConfigId = null
         mappingConfig.userId = userId

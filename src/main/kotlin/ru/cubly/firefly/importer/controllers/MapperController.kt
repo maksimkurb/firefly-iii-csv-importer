@@ -9,7 +9,7 @@ import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 @RestController
-@RequestMapping("/mappers")
+@RequestMapping("/api/mappers")
 class MapperController(
     private val mappingConfigService: MappingConfigService,
     private val userService: UserService
@@ -25,7 +25,10 @@ class MapperController(
             .flatMap { userId -> mappingConfigService.create(userId, mappingConfig) }
 
     @PostMapping("/{mappingConfigId}")
-    fun update(@Valid @NotNull @PathVariable mappingConfigId: Long, @Valid @NotNull @RequestBody mappingConfig: MappingConfig) =
+    fun update(
+        @Valid @NotNull @PathVariable mappingConfigId: Long,
+        @Valid @NotNull @RequestBody mappingConfig: MappingConfig
+    ) =
         userService.getUserId()
             .flatMap { userId -> mappingConfigService.update(userId, mappingConfigId, mappingConfig) }
 

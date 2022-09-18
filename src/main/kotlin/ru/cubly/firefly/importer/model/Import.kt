@@ -18,7 +18,7 @@ data class Import(
     var importId: Long?,
 
     @field:Column("filename")
-    @field:NotNull
+    @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var filename: String?,
 
     @field:Column("user_id")

@@ -11,22 +11,36 @@ import ru.cubly.firefly.importer.entity.ScriptEvaluationResultType
 import ru.cubly.firefly.importer.service.ScriptEvaluationService
 
 @RestController
-@RequestMapping("/scripts")
+@RequestMapping("/api/scripts")
 class ScriptController(
     val scriptEvaluationService: ScriptEvaluationService
 ) {
 
     @PostMapping("/eval")
-    fun getCurrentUser(@RequestBody scriptEvaluationRequest: ScriptEvaluationRequest): Mono<ResponseEntity<Any>> {
-        val result: Mono<out Any> =  when (scriptEvaluationRequest.resultType) {
-            ScriptEvaluationResultType.String -> scriptEvaluationService.evaluateString(scriptEvaluationRequest.script, scriptEvaluationRequest.context)
-            ScriptEvaluationResultType.Integer -> scriptEvaluationService.evaluateInteger(scriptEvaluationRequest.script, scriptEvaluationRequest.context)
-            ScriptEvaluationResultType.Double -> scriptEvaluationService.evaluateDouble(scriptEvaluationRequest.script, scriptEvaluationRequest.context)
-            ScriptEvaluationResultType.Boolean -> scriptEvaluationService.evaluateBoolean(scriptEvaluationRequest.script, scriptEvaluationRequest.context)
-            else -> throw IllegalArgumentException("Illegal return type provided")
+    fun sandboxEvaluate(@RequestBody scriptEvaluationRequest: ScriptEvaluationRequest): Mono<ResponseEntity<Any>> {
+        val result: Mono<out Any> = when (scriptEvaluationRequest.resultType) {
+            ScriptEvaluationResultType.String -> scriptEvaluationService.evaluateString(
+                scriptEvaluationRequest.script,
+                scriptEvaluationRequest.context
+            )
+
+            ScriptEvaluationResultType.Integer -> scriptEvaluationService.evaluateInteger(
+                scriptEvaluationRequest.script,
+                scriptEvaluationRequest.context
+            )
+
+            ScriptEvaluationResultType.Double -> scriptEvaluationService.evaluateDouble(
+                scriptEvaluationRequest.script,
+                scriptEvaluationRequest.context
+            )
+
+            ScriptEvaluationResultType.Boolean -> scriptEvaluationService.evaluateBoolean(
+                scriptEvaluationRequest.script,
+                scriptEvaluationRequest.context
+            )
         }
         return result
             .map { ResponseEntity.ok(it) }
-            .defaultIfEmpty( ResponseEntity.noContent().build() )
+            .defaultIfEmpty(ResponseEntity.noContent().build())
     }
 }

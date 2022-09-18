@@ -1,5 +1,6 @@
 package ru.cubly.firefly.importer.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import ru.cubly.firefly.model.TransactionTypeProperty
 import javax.validation.Valid
 import javax.validation.constraints.AssertTrue
@@ -57,6 +58,7 @@ data class MappingConfigSpec(
         var fieldTrimming: Boolean?,
         var script: String?,
     ) {
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @AssertTrue(message = "You must provide either a 'constant' or 'field' and 'fieldTrimming' or 'script' for value spec")
         fun getValid(): Boolean = constant != null || (field != null && fieldTrimming != null) || script != null
     }
