@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IForm, IFormGroup, IInput, IButton } from '@inkline/inkline'
+import { IForm, IFormGroup, IInput, IButton } from "@inkline/inkline";
 </script>
 
 <template>

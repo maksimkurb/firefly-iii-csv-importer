@@ -1,38 +1,39 @@
-import { throwStatement } from '@babel/types'
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
+import { getFireflyInstanceUrl } from "../services/infoApiClient";
+import { getCurrentUser } from "../services/userApiClient";
 
-interface AuthStore {
-  fireflyUrl: String | null
-  clientId: Number | null
-  clientToken: String | null
-
-  username: String | null
-  token: String | null
+export interface AuthStore {
+  fireflyUrl: string | null;
+  userId: number | null;
+  email: string | null;
 }
 
 export const useAuthStore = defineStore({
-  id: 'auth',
-  state: () => ({
-    fireflyUrl: null,
-    clientId: null,
-    clientToken: null,
-
-    username: null,
-    token: null,
-  } as AuthStore),
+  id: "auth",
+  state: () =>
+    ({
+      fireflyUrl: null,
+      userId: null,
+      email: null,
+    } as AuthStore),
   getters: {
-    isFireflyBackendConfigured: (state) => state.fireflyUrl != null && state.clientId != null && state.clientToken != null,
-    isLoggedIn: (state) => state.token != null,
+    isLoggedIn: (state) => state.userId != null,
   },
   actions: {
-    setFireflySettings(fireflyUrl: String, clientId: Number, clientToken: String) {
+    setFireflySettings(fireflyUrl: string) {
       this.fireflyUrl = fireflyUrl;
-      this.clientId = clientId;
-      this.clientToken = clientToken;
     },
-    setUserDetails(username: String, token: String) {
-      this.username = username;
-      this.token = token;
-    }
-  }
-})
+    setUserDetails(userId: number, email: string) {
+      this.userId = userId;
+      this.email = email;
+    },
+    async fetchFireflySettings() {
+      const fireflyUrl = await getFireflyInstanceUrl();
+      this.setFireflySettings(fireflyUrl);
+    },
+    async fetchUserDetails() {
+      const currentUser = await getCurrentUser();
+      this.setUserDetails(currentUser.userId, currentUser.name);
+    },
+  },
+});
