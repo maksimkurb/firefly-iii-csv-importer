@@ -6,3 +6,23 @@
     --color--primary--s: 77%;
     --color--primary--l: 39%;
 }
+
+
+html ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px
+}
+
+html ::-webkit-scrollbar-thumb {
+    background: var(--color--gray-50);
+    border: var(--border-color);
+    border-radius: var(--border-radius)
+}
+
+html ::-webkit-scrollbar-track {
+    background: var(--color--gray-10)
+}
+
+html body ::-webkit-scrollbar-track {
+    background: transparent
+}

@@ -19,8 +19,8 @@ const apiConfig = new Configuration({
 
 const userApi = new UserControllerApi(apiConfig);
 const scriptApi = new ScriptControllerApi(apiConfig);
-const mapperApi = new MapperControllerApi(apiConfig);
+const mappingConfigApi = new MapperControllerApi(apiConfig);
 const importApi = new ImportControllerApi(apiConfig);
 const infoApi = new InfoControllerApi(apiConfig);
 
-export { userApi, scriptApi, mapperApi, importApi, infoApi };
+export { userApi, scriptApi, mappingConfigApi, importApi, infoApi };

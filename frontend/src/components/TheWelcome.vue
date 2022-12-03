@@ -1,77 +1,56 @@
 <script setup lang="ts">
+import { RouterLink } from "vue-router";
 import WelcomeItem from "./WelcomeItem.vue";
-import MappingItem from "./mapper/MappingItem.vue";
-import { MappingConfig } from "../api";
+import IconMapping from "./icons/IconMapping.vue";
+import IconImport from "./icons/IconImport.vue";
 </script>
 
 <template>
-  <MappingItem :mapping-config="{ name: '123' } as MappingConfig"></MappingItem>
+  <div class="welcome-container">
+    <RouterLink to="/imports" class="_border-right">
+      <WelcomeItem>
+        <template #heading>Imports</template>
+        <template #icon><IconImport /></template>
 
-  <WelcomeItem>
-    <template #heading>Documentation</template>
+        List of your recent imports with their statuses. Go here if you want to
+        import another file.
+      </WelcomeItem>
+    </RouterLink>
+    <RouterLink to="/mappers">
+      <WelcomeItem>
+        <template #heading>Mapping configurations</template>
+        <template #icon><IconMapping /></template>
 
-    Vue’s
-    <a target="_blank" href="https://vuejs.org/">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #heading>Tooling</template>
-
-    This project is served and bundled with
-    <a href="https://vitejs.dev/guide/features.html" target="_blank">Vite</a>.
-    The recommended IDE setup is
-    <a href="https://code.visualstudio.com/" target="_blank">VSCode</a> +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>.
-    If you need to test your components and web pages, check out
-    <a href="https://www.cypress.io/" target="_blank">Cypress</a> and
-    <a
-      href="https://docs.cypress.io/guides/component-testing/introduction"
-      target="_blank"
-      >Cypress Component Testing</a
-    >.
-
-    <br />
-
-    More instructions are available in <code>README.md</code>.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #heading>Ecosystem</template>
-
-    Get official tools and libraries for your project:
-    <a target="_blank" href="https://pinia.vuejs.org/">Pinia</a>,
-    <a target="_blank" href="https://router.vuejs.org/">Vue Router</a>,
-    <a target="_blank" href="https://test-utils.vuejs.org/">Vue Test Utils</a>,
-    and
-    <a target="_blank" href="https://github.com/vuejs/devtools">Vue Dev Tools</a
-    >. If you need more resources, we suggest paying
-    <a target="_blank" href="https://github.com/vuejs/awesome-vue"
-      >Awesome Vue</a
-    >
-    a visit.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #heading>Community</template>
-
-    Got stuck? Ask your question on
-    <a target="_blank" href="https://chat.vuejs.org">Vue Land</a>, our official
-    Discord server, or
-    <a target="_blank" href="https://stackoverflow.com/questions/tagged/vue.js"
-      >StackOverflow</a
-    >. You should also subscribe to
-    <a target="_blank" href="https://news.vuejs.org">our mailing list</a> and
-    follow the official
-    <a target="_blank" href="https://twitter.com/vuejs">@vuejs</a>
-    twitter account for latest news in the Vue world.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #heading>Support Vue</template>
-
-    As an independent project, Vue relies on community backing for its
-    sustainability. You can help us by
-    <a target="_blank" href="https://vuejs.org/sponsor/">becoming a sponsor</a>.
-  </WelcomeItem>
+        List of your mapping configurations with rules on how to process your
+        CSV files.
+      </WelcomeItem>
+    </RouterLink>
+  </div>
 </template>
+
+<style scoped>
+.welcome-container {
+  display: flex;
+  justify-content: center;
+}
+.welcome-container > a {
+  color: inherit;
+}
+.welcome-container > a:hover,
+.welcome-container > a:focus {
+  text-decoration: none;
+}
+.welcome-container > a > div {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  justify-content: center;
+  transition-property: background-color;
+  transition-duration: var(--transition-duration);
+}
+.welcome-container > a:hover > div,
+.welcome-container > a:focus > div {
+  text-decoration: none;
+  background-color: var(--color--primary-05);
+}
+</style>

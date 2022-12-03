@@ -32,7 +32,7 @@
 </style>
 
 <script setup lang="ts">
-import { MappingConfig } from "../../api";
+import { MappingConfig } from "@/api";
 
 defineProps<{
   mappingConfig: MappingConfig;

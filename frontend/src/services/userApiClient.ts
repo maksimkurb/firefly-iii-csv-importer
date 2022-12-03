@@ -1,4 +1,3 @@
-import { FireflyUser } from "../api";
 import { userApi } from "./apiClient";
 
 export async function getCurrentUser(): Promise<FireflyUser> {

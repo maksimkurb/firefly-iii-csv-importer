@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import EditMapperView from "../views/mappers/EditMapperView.vue";
+import ListMappersView from "../views/mappers/ListMappersView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +10,19 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+    },
+    {
+      path: "/mappers",
+      name: "mappers",
+      component: ListMappersView,
+    },
+    {
+      path: "/mappers/new",
+      name: "mappers-new",
+      component: EditMapperView,
+      props: {
+        isNew: true,
+      },
     },
     {
       path: "/about",
