@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.*
 import ru.cubly.firefly.importer.model.MappingConfig
 import ru.cubly.firefly.importer.service.MappingConfigService
 import ru.cubly.firefly.importer.service.UserService
-import javax.validation.Valid
-import javax.validation.constraints.NotNull
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotNull
 
 @RestController
 @RequestMapping("/api/mappers")

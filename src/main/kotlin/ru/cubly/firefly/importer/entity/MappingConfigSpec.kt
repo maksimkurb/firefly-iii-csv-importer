@@ -2,9 +2,9 @@ package ru.cubly.firefly.importer.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import ru.cubly.firefly.model.TransactionTypeProperty
-import javax.validation.Valid
-import javax.validation.constraints.AssertTrue
-import javax.validation.constraints.NotNull
+import jakarta.validation.Valid
+import jakarta.validation.constraints.AssertTrue
+import jakarta.validation.constraints.NotNull
 
 data class MappingConfigSpec(
     @field:NotNull @field:Valid var applyRules: Boolean?,

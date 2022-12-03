@@ -11,8 +11,8 @@ import ru.cubly.firefly.importer.model.Import
 import ru.cubly.firefly.importer.service.ImportService
 import ru.cubly.firefly.importer.service.RawTransactionService
 import ru.cubly.firefly.importer.service.UserService
-import javax.validation.Valid
-import javax.validation.constraints.NotNull
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotNull
 
 @RestController
 @RequestMapping("/api/imports")

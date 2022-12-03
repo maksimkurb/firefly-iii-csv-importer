@@ -8,8 +8,8 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import ru.cubly.firefly.importer.entity.MappingConfigSpec
 import java.time.ZonedDateTime
-import javax.validation.Valid
-import javax.validation.constraints.NotNull
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotNull
 
 @Table("mapping_config")
 data class MappingConfig(
