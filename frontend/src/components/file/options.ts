@@ -1,4 +1,6 @@
 import { RECORD_SEP, UNIT_SEP } from "papaparse";
+import { ISelectOption } from "@/typings/ISelectOption";
+import { ParseResult } from "papaparse";
 
 export const ENCODINGS: ReadonlyArray<ISelectOption> = [
   "UTF-8",
@@ -27,11 +29,6 @@ export const ENCODINGS: ReadonlyArray<ISelectOption> = [
   "IBM-1025",
 ].map(mapEncoding);
 
-export type ISelectOption = {
-  readonly id: string;
-  readonly label: string;
-};
-
 export function mapEncoding(item: string): ISelectOption {
   return { id: item, label: item };
 }
@@ -51,3 +48,12 @@ export const QUOTE_CHARS: ISelectOption[] = [
   { id: '"', label: 'Double Quote (")' },
   { id: "'", label: "Single Quote (')" },
 ];
+
+export type IFileChooserConfigurationInfo = {
+  encoding: ISelectOption;
+  delimeter: ISelectOption;
+  quoteChar: ISelectOption;
+  sampleCsv: ParseResult<Record<string, string>> | null;
+  file: File;
+  clearFile: VoidFunction;
+};

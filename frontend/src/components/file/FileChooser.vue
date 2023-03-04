@@ -1,5 +1,22 @@
 <script setup lang="ts">
-import {IButton, IFormGroup, IFormLabel, IInput, ISelect, ITable,} from "@inkline/inkline";</script>
+import {
+  IButton,
+  IFormGroup,
+  IFormLabel,
+  IInput,
+  ISelect,
+  ITable,
+} from "@inkline/inkline";
+
+import { parse, ParseResult } from "papaparse";
+import {
+  ENCODINGS,
+  DELIMETERS,
+  QUOTE_CHARS,
+  IFileChooserConfigurationInfo,
+} from "./options";
+import { ISelectOption } from "@/typings/ISelectOption";
+</script>
 
 <template>
   <div>
@@ -10,6 +27,7 @@ import {IButton, IFormGroup, IFormLabel, IInput, ISelect, ITable,} from "@inklin
         @change="onFileChosen"
         accept="text/csv"
         name="file"
+        ref="fileInput"
       />
     </IFormGroup>
     <template v-if="sampleBuffer != null">
@@ -133,9 +151,6 @@ import {IButton, IFormGroup, IFormLabel, IInput, ISelect, ITable,} from "@inklin
 </style>
 
 <script lang="ts">
-import { parse, ParseResult } from "papaparse";
-import { ENCODINGS, DELIMETERS, QUOTE_CHARS, ISelectOption } from "./options";
-
 interface IData {
   encodingVariants: readonly ISelectOption[];
   delimeterVariants: readonly ISelectOption[];
@@ -145,6 +160,7 @@ interface IData {
   encoding: ISelectOption;
   delimeter: ISelectOption | null;
   quoteChar: ISelectOption;
+  file: File | null;
 }
 
 export default {
@@ -158,6 +174,7 @@ export default {
       encoding: ENCODINGS[0],
       delimeter: null,
       quoteChar: QUOTE_CHARS[0],
+      file: null,
     };
   },
   computed: {
@@ -214,6 +231,8 @@ export default {
         return;
       }
 
+      this.file = file;
+
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         this.sampleBuffer = reader.result as ArrayBuffer;
@@ -238,7 +257,7 @@ export default {
       }
 
       const trimmedQuery = query.trim().toLocaleLowerCase();
-      let variants = DELIMETERS.filter((delimeter) =>
+      const variants = DELIMETERS.filter((delimeter) =>
         delimeter.label.toLocaleLowerCase().includes(trimmedQuery)
       );
 
@@ -258,7 +277,7 @@ export default {
       }
 
       const trimmedQuery = query.trim().toLocaleLowerCase();
-      let variants = QUOTE_CHARS.filter((quoteChar) =>
+      const variants = QUOTE_CHARS.filter((quoteChar) =>
         quoteChar.label.toLocaleLowerCase().includes(trimmedQuery)
       );
 
@@ -272,7 +291,18 @@ export default {
       this.quoteCharVariants = variants;
     },
     onFileSelect() {
-      this.$emit("fileConfigured");
+      this.$emit("fileConfigured", {
+        encoding: this.encoding,
+        delimeter: this.delimeter,
+        quoteChar: this.quoteChar,
+        sampleCsv: this.sampleCsv,
+        file: this.file,
+        clearFile: this.clearFile,
+      } as IFileChooserConfigurationInfo);
+    },
+    clearFile() {
+      this.file = null;
+      this.sampleBuffer = null;
     },
   },
 };

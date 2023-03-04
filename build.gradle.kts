@@ -90,11 +90,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.13")
-    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.13")
-    implementation("org.springdoc:springdoc-openapi-security:1.6.13")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.13")
-    implementation("org.springdoc:springdoc-openapi-native:1.6.13")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.0.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.0")
+    implementation("org.springdoc:springdoc-openapi-starter-common:2.0.0")
 
     implementation("com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0")
     implementation("com.eclipsesource.j2v8:j2v8_win32_x86_64:4.6.0")

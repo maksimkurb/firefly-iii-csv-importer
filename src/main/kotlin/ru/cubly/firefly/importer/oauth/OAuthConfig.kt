@@ -22,12 +22,15 @@ import org.springframework.security.web.server.ServerAuthenticationEntryPoint
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Flux
+import ru.cubly.firefly.importer.config.CorsProperties
 import java.nio.charset.StandardCharsets
 
 
 @Configuration
 @EnableWebFluxSecurity
-class OAuthConfig {
+class OAuthConfig(
+    val corsProperties: CorsProperties
+) {
 
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
@@ -57,8 +60,7 @@ class OAuthConfig {
                 val configurationSource = UrlBasedCorsConfigurationSource()
                 val config = CorsConfiguration()
 
-                config.addAllowedOrigin("http://localhost:8123")
-                config.addAllowedOrigin("http://localhost:3000")
+                corsProperties.allowedOrigins.forEach(config::addAllowedOrigin)
                 config.addAllowedHeader("*")
                 config.allowCredentials = true
                 config.addAllowedMethod("GET")

@@ -5,7 +5,7 @@ import {
   ScriptControllerApi,
   UserControllerApi,
   InfoControllerApi,
-} from "../api";
+} from "@/api";
 
 export const SERVER_BASE_URL =
   import.meta.env.SERVER_BASE_URL || "http://localhost:8123";

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import FileChooser from "../file/FileChooser.vue";
+import { IFileChooserConfigurationInfo } from "../file/options";
+import FieldMappingConfigurator from "./field/FieldMappingConfigurator.vue";
 
 defineProps<{
   isNew: boolean;
@@ -8,13 +10,17 @@ defineProps<{
 
 <template>
   <div class="container">
-    <div v-if="sample == null && !continueWithoutSample">
-      <h3>Step 1: Upload CSV sample</h3>
+    <div v-if="fileConfigurationInfo == null">
+      <h3>Step 1: Configure CSV read options</h3>
+      <p>Please select CSV file on your computer and configure it's options.</p>
+      <FileChooser @file-configured="onSampleSubmit" />
+    </div>
+    <div v-else>
+      <h3>Step 2: Configure columns mapping</h3>
       <p>
-        Please select CSV file on your computer so you can preview your mapping
-        configuration.
+        Please configure how CSV columns will be mapped into Firefly III fields.
       </p>
-      <FileChooser />
+      <FieldMappingConfigurator :sample-row="{ a: '2', b: 'asd' }" />
     </div>
   </div>
 </template>
@@ -35,22 +41,24 @@ defineProps<{
 <script lang="ts">
 interface IData {
   sample: Record<string, string> | null;
-  continueWithoutSample: boolean;
+  fileConfigurationInfo: IFileChooserConfigurationInfo | null;
 }
 
 export default {
   data() {
     const data: IData = {
       sample: null,
-      continueWithoutSample: false,
+      fileConfigurationInfo: null,
     };
-
     return data;
   },
   methods: {
-    onSampleSubmit() {
-      //
+    onSampleSubmit(e: IFileChooserConfigurationInfo) {
+      console.log("File is configured", e);
+      this.fileConfigurationInfo = e;
+      e.clearFile();
     },
   },
+  components: { FieldMappingConfigurator },
 };
 </script>
